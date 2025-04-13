@@ -94,12 +94,14 @@ export default function Home() {
     });
   };
 
-  const clearLocalStorage = () => {
-    localStorage.removeItem("scheduleV2");
-    localStorage.removeItem("titleOptions");
-    setSchedule([]);
-    setTitleOptions(initialTitleOptions);
-    setTitle(initialTitleOptions[0]); // 初期タイトルに戻す
+  const resetLocalStorage = () => {
+    if (window.confirm("ローカルストレージをリセットしますか？すべてのデータが削除されます。")) {
+      localStorage.removeItem("scheduleV2");
+      localStorage.removeItem("titleOptions");
+      setSchedule([]);
+      setTitleOptions(initialTitleOptions);
+      setTitle(initialTitleOptions[0]); // 初期タイトルに戻す
+    }
   };
 
   const deleteEvent = (id: number) => {
@@ -213,10 +215,10 @@ export default function Home() {
           予定を追加
         </button>
         <button
-          onClick={clearLocalStorage}
+          onClick={resetLocalStorage}
           className="w-full bg-red-500 text-white py-2 rounded text-sm hover:bg-red-600"
         >
-          ローカルストレージをクリア
+          リセット
         </button>
 
         {/* 新しいタイトルを追加するフォーム（入力エリア内） */}
@@ -275,13 +277,20 @@ export default function Home() {
           >
             {/* 1時間単位の時間を追記 */}
             {index % 12 === 0 && (
-              <div
-                className="absolute left-0 text-xs text-gray-500"
-                style={{ top: '-12px', left: 'calc(-1em - 2px)' }} // calcで調整
-              >
-                {time.split(":")[0]}
-              </div>
+            <div
+              className="absolute left-0 text-xs text-gray-500"
+              style={{ top: '-12px', left: 'calc(-1em - 3px)' }} // 修正：topを-12pxに
+            >
+              {time.split(":")[0]} {/* 時間部分だけ表示 */}
+            </div>
             )}
+            {/* 分を右側に表示 */}
+            <div
+              className="absolute right-0 text-xs text-gray-500"
+              style={{ top: '-12px', right: 'calc(-1em - 3px)' }} // 右側に配置
+            >
+              {time.split(":")[1]} {/* 分部分だけ表示 */}
+            </div>
           </div>
         ))}
 
