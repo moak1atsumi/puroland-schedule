@@ -1,6 +1,14 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 
+// 型定義を追加
+type Event = {
+  id: number;
+  title: string;
+  start: string;
+  end: string;
+};
+
 const timeSlots = Array.from({ length: 109 }, (_, i) => {
   const totalMinutes = 9 * 60 + i * 5;
   const hour = Math.floor(totalMinutes / 60);
@@ -32,14 +40,14 @@ const titleColors = [
 ];
 
 export default function Home() {
-  const [schedule, setSchedule] = useState([]);
+  const [schedule, setSchedule] = useState<Event[]>([]); // 型を指定
   const [title, setTitle] = useState(initialTitleOptions[0]);
   const [start, setStart] = useState("09:00");
   const [duration, setDuration] = useState(15);
   const [titleOptions, setTitleOptions] = useState(initialTitleOptions);
   const [newTitle, setNewTitle] = useState(""); // 新しいタイトルを管理するためのステート
   const [inputAreaHeight, setInputAreaHeight] = useState(0); // 入力エリアの高さを管理するステート
-  const inputAreaRef = useRef(null); // 入力エリアの高さを取得するためのref
+  const inputAreaRef = useRef<HTMLDivElement>(null); // 入力エリアの高さを取得するためのref
 
   useEffect(() => {
     const savedSchedule = localStorage.getItem("scheduleV2");
@@ -94,16 +102,16 @@ export default function Home() {
     setTitle(initialTitleOptions[0]); // 初期タイトルに戻す
   };
 
-  const deleteEvent = (id) => {
+  const deleteEvent = (id: number) => {
     setSchedule(schedule.filter((e) => e.id !== id));
   };
 
-  const timeToIndex = (time) => {
+  const timeToIndex = (time: string) => {
     const [h, m] = time.split(":").map(Number);
     return Math.round(((h * 60 + m) - 540) / 5);
   };
 
-  const removeTitle = (titleToRemove) => {
+  const removeTitle = (titleToRemove: string) => {
     // タイトルを削除し、そのタイトルに関連する予定も削除
     setTitleOptions((prevTitles) =>
       prevTitles.filter((t) => t !== titleToRemove)
@@ -138,7 +146,7 @@ export default function Home() {
   const totalHeight = timeSlots.length * 16;
   const columnWidth = 100 / titleOptions.length;
 
-  const getEventStyle = (event, col) => {
+  const getEventStyle = (event: Event, col: number) => {
     const startIdx = timeToIndex(event.start);
     const endIdx = timeToIndex(event.end);
     const top = startIdx * 16;
@@ -151,7 +159,7 @@ export default function Home() {
     };
   };
 
-  const getColumn = (title) => {
+  const getColumn = (title: string) => {
     return titleOptions.indexOf(title);
   };
 
