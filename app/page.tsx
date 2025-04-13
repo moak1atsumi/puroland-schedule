@@ -151,10 +151,14 @@ export default function Home() {
     const endIdx = timeToIndex(event.end);
     const top = startIdx * 16;
     const height = (endIdx - startIdx) * 16;
+
+    // 予定ボックスのleftに関する変更なし
+    const left = `${col * columnWidth}%`;
+
     return {
       top: `${top}px`,
       height: `${height}px`,
-      left: `${col * columnWidth}%`,
+      left: left,  // leftの変更なし
       width: `${columnWidth}%`,
     };
   };
@@ -266,9 +270,19 @@ export default function Home() {
         {timeSlots.map((time, index) => (
           <div
             key={time}
-            className={`border-b ${time.endsWith(":00") ? "border-t-2 border-black" : ""}`}
+            className={`relative border-b ${time.endsWith(":00") ? "border-t-2 border-black" : ""}`}
             style={{ height: '16px' }}
-          />
+          >
+            {/* 1時間単位の時間を追記 */}
+            {index % 12 === 0 && (
+              <div
+                className="absolute left-0 text-xs text-gray-500"
+                style={{ top: '-12px', left: 'calc(-1em - 2px)' }} // calcで調整
+              >
+                {time.split(":")[0]}
+              </div>
+            )}
+          </div>
         ))}
 
         {/* スケジュールボックス */}
