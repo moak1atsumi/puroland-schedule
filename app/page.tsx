@@ -26,7 +26,6 @@ const initialTitleOptions = [
 const titleColors = [
   "bg-blue-200",
   "bg-green-200",
-  "bg-yellow-200",
   "bg-orange-200",
   "bg-purple-200",
   "bg-pink-200",
@@ -299,7 +298,6 @@ export default function Home() {
           const colorClass = titleColors[titleOptions.indexOf(event.title) % titleColors.length];
           return (
             <div
-              key={event.id}
               className={`absolute ${colorClass} rounded text-sm overflow-hidden shadow px-2 py-1 cursor-pointer`}
               style={style}
               onClick={() => setEditingEvent(event)}
