@@ -400,7 +400,7 @@ export default function Home() {
             <h2 className="text-xl font-bold text-center">🎂お誕生日おめでとう🎂</h2>
             <p className="text-sm text-gray-700">
               いつも家族のことを思ってくれて、心から感謝しています。これからもよろしくね 🍮<br/>
-              ※下に隠れているポムポムプリンをクリックして！
+              ※下に隠れているポムポムプリンをクリックしてね！
             </p>
             <button
               onClick={() => setShowMessageModal(false)}
