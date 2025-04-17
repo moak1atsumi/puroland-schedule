@@ -246,7 +246,7 @@ export default function Home() {
               type="text"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              className="flex-1 border px-3 py-2 rounded text-sm bg-white"
+              className="flex-1 border px-3 py-2 rounded bg-white"
               placeholder="新しいタイトルを追加"
             />
             <button
