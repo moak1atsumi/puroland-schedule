@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 
-// 型定義を追加
 type Event = {
   id: number;
   title: string;
@@ -18,14 +17,10 @@ const timeSlots = Array.from({ length: 109 }, (_, i) => {
 
 const durationOptions = Array.from({ length: 6 }, (_, i) => (i + 1) * 5);
 const initialTitleOptions = [
-  "入園・チケット確認",
-  "シナモンのグリーティング",
-  "マイメロのライブショー",
+  "パレード/ショー",
+  "グリーティング",
+  "アトラクション",
   "お昼ごはん",
-  "買い物タイム",
-  "写真撮影",
-  "パレード観賞",
-  "お見送り・退園",
 ];
 
 const titleColors = [
@@ -79,6 +74,11 @@ export default function Home() {
     }
   }, [showInputArea, schedule, titleOptions, start, duration, newTitle]);
 
+  const timeToIndex = (time: string) => {
+    const [h, m] = time.split(":" ).map(Number);
+    return Math.round(((h * 60 + m) - 540) / 5);
+  };
+
   const addEvent = () => {
     if (!title.trim()) return;
 
@@ -92,9 +92,7 @@ export default function Home() {
     const hasOverlap = schedule.some((e) => {
       const existingStart = timeToIndex(e.start);
       const existingEnd = timeToIndex(e.end);
-      return (
-        newStart < existingEnd && newEnd > existingStart && e.title !== title
-      );
+      return newStart < existingEnd && newEnd > existingStart;
     });
 
     if (hasOverlap) {
@@ -103,14 +101,11 @@ export default function Home() {
     }
 
     const newEvent = { id: Date.now(), title, start, end: endTime };
-    setSchedule((prev) => {
-      const filtered = prev.filter((e) => e.title !== title);
-      return [...filtered, newEvent];
-    });
+    setSchedule((prev) => [...prev, newEvent]);
   };
 
   const resetLocalStorage = () => {
-    if (window.confirm("ローカルストレージをリセットしますか？すべてのデータが削除されます。")) {
+    if (window.confirm("初期状態に戻しますか？すべてのデータが削除されます。")) {
       localStorage.removeItem("scheduleV2");
       localStorage.removeItem("titleOptions");
       setSchedule([]);
@@ -121,28 +116,6 @@ export default function Home() {
 
   const deleteEvent = (id: number) => {
     setSchedule(schedule.filter((e) => e.id !== id));
-  };
-
-  const timeToIndex = (time: string) => {
-    const [h, m] = time.split(":").map(Number);
-    return Math.round(((h * 60 + m) - 540) / 5);
-  };
-
-  const removeTitle = (titleToRemove: string) => {
-    setTitleOptions((prevTitles) => prevTitles.filter((t) => t !== titleToRemove));
-
-    setSchedule((prevSchedule) => {
-      const updatedSchedule = prevSchedule.filter((e) => e.title !== titleToRemove);
-      localStorage.setItem("scheduleV2", JSON.stringify(updatedSchedule));
-      return updatedSchedule;
-    });
-
-    const updatedTitleOptions = titleOptions.filter((t) => t !== titleToRemove);
-    localStorage.setItem("titleOptions", JSON.stringify(updatedTitleOptions));
-
-    if (title === titleToRemove) {
-      setTitle(updatedTitleOptions[0] || "");
-    }
   };
 
   const addNewTitle = () => {
@@ -169,6 +142,21 @@ export default function Home() {
 
   const saveEditedEvent = () => {
     if (editingEvent) {
+      const newStart = timeToIndex(editingEvent.start);
+      const newEnd = timeToIndex(editingEvent.end);
+
+      const hasOverlap = schedule.some((e) => {
+        if (e.id === editingEvent.id) return false;
+        const existingStart = timeToIndex(e.start);
+        const existingEnd = timeToIndex(e.end);
+        return newStart < existingEnd && newEnd > existingStart;
+      });
+
+      if (hasOverlap) {
+        alert("その時間帯には他の予定があります");
+        return;
+      }
+
       const updatedSchedule = schedule.map((e) =>
         e.id === editingEvent.id ? editingEvent : e
       );
@@ -185,7 +173,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative p-4 max-w-md mx-auto" style={{ paddingBottom: inputAreaHeight }}>
+    <div className="relative p-5 max-w-md mx-auto" style={{ paddingBottom: inputAreaHeight }}>
       <div className="text-center mb-2">
         <img
           src="/pompomprin_512x512.webp"
@@ -281,7 +269,7 @@ export default function Home() {
             style={{ height: "16px" }}
           >
             {index % 12 === 0 && (
-              <div className="absolute left-0 text-xs text-gray-500" style={{ top: "-12px", left: "calc(-1em - 3px)" }}>{time.split(":")[0]}</div>
+              <div className="absolute left-0 text-s text-gray-500" style={{ top: "-15px", left: "calc(-1em - 3px)" }}>{time.split(":")[0]}</div>
             )}
           </div>
         ))}
@@ -299,7 +287,7 @@ export default function Home() {
               <div className="text-xs font-bold text-center">{event.title}</div>
               <div className="text-xs text-center">{event.start} - {event.end}</div>
               <button
-                className="absolute top-1 right-1 text-white text-xs"
+                className="absolute top-1 right-1 text-white"
                 onClick={(e) => {
                   e.stopPropagation();
                   deleteEvent(event.id);
