@@ -44,7 +44,19 @@ export default function Home() {
   const [inputAreaHeight, setInputAreaHeight] = useState(0);
   const [showInputArea, setShowInputArea] = useState(true);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [showMessageModal2, setShowMessageModal2] = useState(false);
   const inputAreaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((reg) => {
+          reg.unregister();
+        });
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const savedSchedule = localStorage.getItem("scheduleV2");
@@ -174,6 +186,14 @@ export default function Home() {
 
   return (
     <div className="relative p-5 max-w-md mx-auto" style={{ paddingBottom: inputAreaHeight }}>
+      <div className="absolute top-4 right-4 z-50">
+        <button
+          onClick={() => setShowMessageModal(true)}
+          className="text-gray-600 text-xl hover:text-gray-800"
+        >
+          ✉️
+        </button>
+      </div>
       <div className="text-center mb-2">
         <img
           src="/pompomprin_512x512.webp"
@@ -181,7 +201,7 @@ export default function Home() {
           className="mx-auto w-12 h-12"
         />
       </div>
-      <div className="absolute left-0 right-0 bottom-24">
+      <div className="absolute left-0 right-0 bottom-24" onClick={() => setShowMessageModal2(true)}>
         <img
           src="/list-pompompurin.png"
           alt="ポムポムプリン"
@@ -351,6 +371,58 @@ export default function Home() {
             <button
               className="w-full mt-2 text-sm text-gray-600 underline"
               onClick={() => setEditingEvent(null)}
+            >
+              閉じる
+            </button>
+          </div>
+        </div>
+      )}
+      {showMessageModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded shadow max-w-sm w-full space-y-4">
+            <h2 className="text-xl font-bold text-center">お誕生日おめでとう！</h2>
+            <p className="text-sm text-gray-700">
+              いつも家族のことを思ってくれて、心から感謝しています。
+              これからもよろしくね 🍮
+            </p>
+            <button
+              onClick={() => setShowMessageModal(false)}
+              className="w-full bg-yellow-400 hover:bg-yellow-500 text-white py-2 rounded"
+            >
+              閉じる
+            </button>
+          </div>
+        </div>
+      )}
+      {showMessageModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded shadow max-w-sm w-full space-y-4">
+            <h2 className="text-xl font-bold text-center">🎂お誕生日おめでとう🎂</h2>
+            <p className="text-sm text-gray-700">
+              いつも家族のことを思ってくれて、心から感謝しています。これからもよろしくね 🍮<br/>
+              ※下にいるポムポムプリンをクリックして！
+            </p>
+            <button
+              onClick={() => setShowMessageModal(false)}
+              className="w-full bg-yellow-400 hover:bg-yellow-500 text-white py-2 rounded"
+            >
+              閉じる
+            </button>
+          </div>
+        </div>
+      )}
+      {showMessageModal2 && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded shadow max-w-sm w-full space-y-4">
+            <h2 className="text-xl font-bold text-center">占い</h2>
+            <p className="text-sm text-gray-700">
+              あなたの運勢は「大吉」です！<br/>
+              今後何があっても上手くいくでしょう 🍮<br/>
+              byポムポムより!
+            </p>
+            <button
+              onClick={() => setShowMessageModal2(false)}
+              className="w-full bg-yellow-400 hover:bg-yellow-500 text-white py-2 rounded"
             >
               閉じる
             </button>
