@@ -414,7 +414,7 @@ export default function Home() {
       {showMessageModal2 && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-4 rounded shadow max-w-sm w-full space-y-4">
-            <h2 className="text-xl font-bold text-center">占い</h2>
+            <h2 className="text-xl font-bold text-center">ポム占い</h2>
             <p className="text-sm text-gray-700">
               あなたの運勢は「大吉」です！<br/>
               今後何があっても上手くいくでしょう 🍮<br/>
