@@ -418,7 +418,7 @@ export default function Home() {
             <p className="text-sm text-gray-700">
               あなたの運勢は「大吉」です！<br/>
               今後何があっても上手くいくでしょう！<br/>
-              byポムポムより🍮
+              byポムポムプリンより🍮
             </p>
             <button
               onClick={() => setShowMessageModal2(false)}
