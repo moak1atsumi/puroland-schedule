@@ -399,8 +399,8 @@ export default function Home() {
           <div className="bg-white p-4 rounded shadow max-w-sm w-full space-y-4">
             <h2 className="text-xl font-bold text-center">🎂お誕生日おめでとう🎂</h2>
             <p className="text-sm text-gray-700">
-              いつも家族のことを思ってくれて、心から感謝しています。これからもよろしくね 🍮<br/>
-              ※下に隠れているポムポムプリンをクリックしてね！
+              いつも家族のことを思ってくれて、心から感謝しています。これからもよろしくね!<br/>
+              ※下に隠れているポムポムプリンをクリックしてね🍮
             </p>
             <button
               onClick={() => setShowMessageModal(false)}
@@ -417,8 +417,8 @@ export default function Home() {
             <h2 className="text-xl font-bold text-center">ポム占い</h2>
             <p className="text-sm text-gray-700">
               あなたの運勢は「大吉」です！<br/>
-              今後何があっても上手くいくでしょう 🍮<br/>
-              byポムポムより!
+              今後何があっても上手くいくでしょう！<br/>
+              byポムポムより🍮
             </p>
             <button
               onClick={() => setShowMessageModal2(false)}
